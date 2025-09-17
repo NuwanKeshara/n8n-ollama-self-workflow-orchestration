@@ -1,0 +1,539 @@
+{
+  "name": "LinkedIn Job Search",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -992,
+        0
+      ],
+      "id": "403c2cc2-df99-42ed-b65a-89e02c637205",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "operation": "extractHtmlContent",
+        "extractionValues": {
+          "values": [
+            {
+              "key": "JobTitle",
+              "cssSelector": "a.base-card__full-link",
+              "returnArray": true
+            },
+            {
+              "key": "Company",
+              "cssSelector": ".base-search-card__subtitle a",
+              "returnArray": true
+            },
+            {
+              "key": "Location",
+              "cssSelector": "span.job-search-card__location",
+              "returnArray": true
+            },
+            {
+              "key": "Published",
+              "cssSelector": "=time.job-search-card__listdate--new , time.job-search-card__listdate , time.job-search-card__listdate--updated",
+              "returnArray": true
+            },
+            {
+              "key": "Link",
+              "cssSelector": ".base-card__full-link",
+              "returnValue": "attribute",
+              "attribute": "href",
+              "returnArray": true
+            }
+          ]
+        },
+        "options": {
+          "trimValues": true,
+          "cleanUpText": false
+        }
+      },
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [
+        -640,
+        0
+      ],
+      "id": "cb681989-d5b0-416b-a55d-1cad87921ac4",
+      "name": "HTML"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "e3c48711-9ccf-4280-836e-85d75d0bb519",
+              "leftValue": "={{ $json[\"Job Title\"].trim().toLowerCase() }}",
+              "rightValue": "data",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "c5e3bcd7-199a-43ac-9b05-4488c26cad06",
+              "leftValue": "={{ $json[\"Job Title\"].trim().toLowerCase() }}",
+              "rightValue": "analyst",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "299b376e-c7b9-4048-a58b-849b5a6a743a",
+              "leftValue": "={{ $json[\"Job Title\"].trim().toLowerCase() }}",
+              "rightValue": "analytic",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "d1b96245-d843-43f0-b36f-d65712e90697",
+              "leftValue": "={{ $json[\"Job Title\"].trim().toLowerCase() }}",
+              "rightValue": "intelligence",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "d96bdfd3-b24b-4b1c-8061-b2657b8a54a7",
+              "leftValue": "={{ $json[\"Job Title\"].trim().toLowerCase() }}",
+              "rightValue": "tableau",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "9bbd08e9-9f93-4983-9851-e05640c9226b",
+              "leftValue": "={{ $json[\"Job Title\"].trim().toLowerCase() }}",
+              "rightValue": "power",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "8ca1b134-ab5b-48a4-b2b4-3945aa5c7218",
+              "leftValue": "={{ $json[\"Job Title\"].trim().toLowerCase() }}",
+              "rightValue": "sql",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        -208,
+        0
+      ],
+      "id": "b7ef3e98-7117-4f04-8c11-d0295d840c50",
+      "name": "Filter1"
+    },
+    {
+      "parameters": {
+        "mergeByFields": {
+          "values": [
+            {
+              "field1": "Job Title",
+              "field2": "Job Title"
+            },
+            {
+              "field1": "Company",
+              "field2": "Company"
+            },
+            {
+              "field1": "Location",
+              "field2": "Location"
+            }
+          ]
+        },
+        "resolve": "preferInput2",
+        "options": {
+          "skipFields": "Published, Link"
+        }
+      },
+      "type": "n8n-nodes-base.compareDatasets",
+      "typeVersion": 2.3,
+      "position": [
+        144,
+        -192
+      ],
+      "id": "df518f29-6003-4f37-9b01-018755442cc4",
+      "name": "Compare Datasets"
+    },
+    {
+      "parameters": {
+        "fileSelector": "/data/shared/keywords.xls",
+        "options": {
+          "dataPropertyName": "data"
+        }
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        -496,
+        -288
+      ],
+      "id": "75345b03-b15e-44f1-9a8c-22c437b670f9",
+      "name": "Read/Write Files from Disk"
+    },
+    {
+      "parameters": {
+        "fromEmail": "dthusara123@gmail.com",
+        "toEmail": "nuwankyazh@gmail.com",
+        "subject": "=LinkedIn -  {{ $json.key }} JOBS",
+        "emailFormat": "text",
+        "text": "={{ $json.value }}",
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        752,
+        -80
+      ],
+      "id": "ebd6f392-0b6e-473e-925c-19a6cd2aa2ff",
+      "name": "Send email",
+      "webhookId": "a391a4d7-c938-4d1f-ae59-81ac07fa8cbf",
+      "credentials": {
+        "smtp": {
+          "id": "wNBitTm4o46kfZoq",
+          "name": "SMTP account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://www.linkedin.com/jobs/search?f_TPR=r86400&location=Finland",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -800,
+        0
+      ],
+      "id": "8c927bb4-a5cd-4c08-b2ff-b7d3ed4e4fbf",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "jsCode": "const job = $json.JobTitle;\nconst company = $json.Company;\nconst location = $json.Location;\nconst published = $json.Published;\nconst link = $json.Link;\n\n// Combine into single array of objects\nconst combined = job.map((jobItem, index) => {\n  return {\n    'Job Title': jobItem,\n    'Company': company[index],\n    'Location': location[index],\n    'Published': published[index],\n    'Link': link[index]\n  };\n});\n\nreturn combined.map(item => ({ json: item }));\n\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -464,
+        0
+      ],
+      "id": "7754f776-25d4-478a-883f-688783c8f96c",
+      "name": "Code in JavaScript",
+      "alwaysOutputData": true,
+      "onError": "continueErrorOutput",
+      "notes": "Error in Java Script Function"
+    },
+    {
+      "parameters": {
+        "operation": "xls",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        -208,
+        -288
+      ],
+      "id": "95a9b653-00da-45d3-885c-a139866bbc0d",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "operation": "xls",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        752,
+        -304
+      ],
+      "id": "e747e4df-cee1-4063-ac4b-30617f8547b8",
+      "name": "Convert to File"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        512,
+        -304
+      ],
+      "id": "80e1c972-cbc3-4551-a271-5a897bd78d07",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "/data/shared/keywords.xls",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        992,
+        -304
+      ],
+      "id": "50ba22d9-fda3-4352-9cca-5aa88fc6d3d4",
+      "name": "Read/Write Files from Disk1"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\n\nlet output = \"\";\n\nitems.forEach((item, index) => {\n  output += `JOB ${index + 1}:\\n`;\n  output += `Job Title: ${item.json[\"Job Title\"]}\\n`;\n  output += `Company: ${item.json.Company}\\n`;\n  output += `Date: ${item.json.Published}\\n`;\n  output += `Link: ${item.json.Link}\\n\\n`;\n});\n\nreturn [{\n  json: {\n    key: items.length.toString(),   // total number of jobs as string\n    value: output.trim()            // formatted job details\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        496,
+        -80
+      ],
+      "id": "4f987e0f-816c-42ff-ba17-fbaffd2e104e",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "fromEmail": "dthusara123@gmail.com",
+        "toEmail": "nuwankyazh@gmail.com",
+        "subject": "=ERROR - Splitting Data",
+        "emailFormat": "text",
+        "text": "Check Java Script Code after extracting HTML parser",
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        -208,
+        192
+      ],
+      "id": "eed61997-3a72-4ef8-a7a9-2ae0c3ad26cc",
+      "name": "Send email1",
+      "webhookId": "a391a4d7-c938-4d1f-ae59-81ac07fa8cbf",
+      "credentials": {
+        "smtp": {
+          "id": "wNBitTm4o46kfZoq",
+          "name": "SMTP account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Send a email if there is a new Data job published on LinkedIn in Finland",
+        "height": 112,
+        "width": 448
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1024,
+        -496
+      ],
+      "typeVersion": 1,
+      "id": "b81b9872-3ecf-469b-8635-bbb8c2903286",
+      "name": "Sticky Note"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Read/Write Files from Disk",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTML": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter1": {
+      "main": [
+        [
+          {
+            "node": "Compare Datasets",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Compare Datasets": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [],
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          },
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read/Write Files from Disk": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "HTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Filter1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send email1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "Compare Datasets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "Read/Write Files from Disk1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send email": {
+      "main": [
+        []
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "Send email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "4d4d4159-4a98-4cc7-b03a-5c566ffd8662",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "558d88703fb65b2d0e44613bc35916258b0f0bf983c5d4730c00c424b77ca36a"
+  },
+  "id": "rpFeDPsAjKK7zZZO",
+  "tags": []
+}
