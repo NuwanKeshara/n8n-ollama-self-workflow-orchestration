@@ -27,27 +27,27 @@
           "values": [
             {
               "key": "JobTitle",
-              "cssSelector": "a.base-card__full-link",
+              "cssSelector": "div.base-card a.base-card__full-link",
               "returnArray": true
             },
             {
               "key": "Company",
-              "cssSelector": ".base-search-card__subtitle a",
+              "cssSelector": "div.base-card .base-search-card__subtitle a",
               "returnArray": true
             },
             {
               "key": "Location",
-              "cssSelector": "span.job-search-card__location",
+              "cssSelector": "div.base-card .job-search-card__location",
               "returnArray": true
             },
             {
               "key": "Published",
-              "cssSelector": "=time.job-search-card__listdate--new , time.job-search-card__listdate , time.job-search-card__listdate--updated",
+              "cssSelector": "=div.base-card time",
               "returnArray": true
             },
             {
               "key": "Link",
-              "cssSelector": ".base-card__full-link",
+              "cssSelector": "div.base-card a.base-card__full-link",
               "returnValue": "attribute",
               "attribute": "href",
               "returnArray": true
@@ -316,7 +316,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const items = $input.all();\n\nlet output = \"\";\n\nitems.forEach((item, index) => {\n  output += `JOB ${index + 1}:\\n`;\n  output += `Job Title: ${item.json[\"Job Title\"]}\\n`;\n  output += `Company: ${item.json.Company}\\n`;\n  output += `Date: ${item.json.Published}\\n`;\n  output += `Link: ${item.json.Link}\\n\\n`;\n});\n\nreturn [{\n  json: {\n    key: items.length.toString(),   // total number of jobs as string\n    value: output.trim()            // formatted job details\n  }\n}];\n"
+        "jsCode": "const items = $input.all();\n\nlet output = \"\";\n\nitems.forEach((item, index) => {\n  output += `JOB ${index + 1}:\\n`;\n  output += `Job Title: ${item.json[\"Job Title\"]}\\n`;\n  output += `Company: ${item.json.Company}\\n`;\n  output += `Location: ${item.json.Location}\\n`;\n  output += `Date: ${item.json.Published}\\n`;\n  output += `Link: ${item.json.Link}\\n\\n\\n`;\n});\n\nreturn [{\n  json: {\n    key: items.length.toString(),   // total number of jobs as string\n    value: output.trim()            // formatted job details\n  }\n}];\n"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -525,11 +525,11 @@
       ]
     }
   },
-  "active": false,
+  "active": true,
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "4d4d4159-4a98-4cc7-b03a-5c566ffd8662",
+  "versionId": "331c71db-1e27-44fa-86b1-2156d517e896",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "558d88703fb65b2d0e44613bc35916258b0f0bf983c5d4730c00c424b77ca36a"
