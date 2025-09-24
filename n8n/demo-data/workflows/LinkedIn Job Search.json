@@ -232,7 +232,7 @@
     },
     {
       "parameters": {
-        "url": "https://www.linkedin.com/jobs/search?f_TPR=r86400&location=Finland",
+        "url": "https://www.linkedin.com/jobs/search?location=Finland&f_TPR=r3600",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
@@ -356,14 +356,14 @@
     },
     {
       "parameters": {
-        "content": "## Send a email if there is a new Data job published on LinkedIn \n## Location = Finland \n## Time Published < 24h",
+        "content": "## Send a email if there is a new Data job published on LinkedIn \n## Location = Finland \n## Time Published <= 1h",
         "height": 176,
         "width": 480
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        -1024,
-        -496
+        -1264,
+        -672
       ],
       "typeVersion": 1,
       "id": "b81b9872-3ecf-469b-8635-bbb8c2903286",
@@ -525,11 +525,11 @@
       ]
     }
   },
-  "active": true,
+  "active": false,
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "47c1e0ea-65aa-4d99-87a1-30c85cfc3a5c",
+  "versionId": "dbfe8a46-cd23-4d3a-a521-b9a5704c5664",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "558d88703fb65b2d0e44613bc35916258b0f0bf983c5d4730c00c424b77ca36a"
