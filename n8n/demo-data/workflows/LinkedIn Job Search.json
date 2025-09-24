@@ -356,9 +356,9 @@
     },
     {
       "parameters": {
-        "content": "## Send a email if there is a new Data job published on LinkedIn in Finland",
-        "height": 112,
-        "width": 448
+        "content": "## Send a email if there is a new Data job published on LinkedIn \n## Location = Finland \n## Time Published < 24h",
+        "height": 176,
+        "width": 480
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
@@ -529,7 +529,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "9704d69b-3a39-44b5-b69f-a9334a8b4437",
+  "versionId": "47c1e0ea-65aa-4d99-87a1-30c85cfc3a5c",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "558d88703fb65b2d0e44613bc35916258b0f0bf983c5d4730c00c424b77ca36a"
