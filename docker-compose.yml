@@ -75,7 +75,7 @@ services:
     container_name: n8n-new
     restart: unless-stopped
     ports:
-      - 5679:5678   # changed host port to avoid conflict
+      - 5679:5678
     volumes:
       - n8n_storage:/home/node/.n8n
       - ./n8n/demo-data:/demo-data
@@ -113,7 +113,7 @@ services:
     depends_on:
       - ollama-gpu
 
-  # Open Web UI for Ollama (renamed container to avoid conflicts)
+  # Open Web UI for Ollama
   open-webui-new:
     image: ghcr.io/open-webui/open-webui:main
     container_name: open-webui-new
